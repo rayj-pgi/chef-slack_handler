@@ -23,7 +23,7 @@ require "timeout"
 require_relative 'slack_handler_util'
 
 class Chef::Handler::Slack < Chef::Handler
-  attr_reader :webhooks, :username, :config, :timeout, :icon_emoji, :fail_only, :message_detail_level, :cookbook_detail_level
+  attr_reader :webhooks, :username, :config, :timeout, :icon_emoji, :fail_only, :message_detail_level, :cookbook_detail_level, :hostname
 
   def initialize(config = {})
     Chef::Log.debug('Initializing Chef::Handler::Slack')
@@ -37,6 +37,7 @@ class Chef::Handler::Slack < Chef::Handler
     @fail_only = @config[:fail_only]
     @message_detail_level = @config[:message_detail_level]
     @cookbook_detail_level = @config[:cookbook_detail_level]
+    @hostname = @config[:hostname]
   end
 
   def report

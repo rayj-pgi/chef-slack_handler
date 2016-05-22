@@ -29,7 +29,7 @@ require "timeout"
 require_relative 'slack_handler_util'
 
 class Chef::Handler::Slack < Chef::Handler
-  attr_reader :team, :api_key, :config, :timeout, :fail_only, :message_detail_level, :cookbook_detail_level
+  attr_reader :team, :api_key, :config, :timeout, :fail_only, :message_detail_level, :cookbook_detail_level, :hostname
 
   def initialize(config = {})
     Chef::Log.debug('Initializing Chef::Handler::Slack')
@@ -43,6 +43,7 @@ class Chef::Handler::Slack < Chef::Handler
     @fail_only = @config[:fail_only]
     @message_detail_level = @config[:message_detail_level]
     @cookbook_detail_level = @config[:cookbook_detail_level]
+    @hostname = @config[:hostname]
   end
 
   def report
@@ -75,15 +76,15 @@ class Chef::Handler::Slack < Chef::Handler
 
   def report_chef_run_start
     return false unless @util.send_on_start
-    slack_message(@util.start_message.to_s, run_status.node.name)
+    slack_message(@util.start_message(@config).to_s, run_status.node.name)
   end
 
   def report_chef_run_end
     if run_status.success?
       return false if @util.fail_only
-      slack_message("#{@util.end_message(run_status)} \n #{run_status.exception}", run_status.node.name)
+      slack_message("#{@util.end_message(run_status, @config)} \n #{run_status.exception}", run_status.node.name)
     else
-      slack_message(@util.end_message(run_status).to_s, run_status.node.name)
+      slack_message(@util.end_message(run_status, @config).to_s, run_status.node.name)
     end
   end
 

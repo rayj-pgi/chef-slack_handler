@@ -49,3 +49,5 @@ default['chef_client']['handler']['slack']['fail_only'] = false
 default['chef_client']['handler']['slack']['send_start_message'] = false
 # Whether to send a message the node.chef_environment as well as the node.name
 default['chef_client']['handler']['slack']['send_environment'] = false
+
+default['chef_client']['handler']['slack']['hostname'] = nil
