@@ -26,12 +26,13 @@ class SlackHandlerUtil
   private
 
   def node
-    Chef.run_context.node
+    node = Chef.run_context.node
     if node.has_key? 'linux_hostname' 
       Chef.run_context.node.name = node.find { |k,v| k == 'linux_hostname' }
     elsif node.has_key? 'windows_hostname'
       Chef.run_context.node.name = Chef.run_context.node.name.find { |k,v| k == 'windows_hostname' }
     end
+    node
   end
 
   def run_status_human_readable(run_status)
