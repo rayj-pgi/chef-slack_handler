@@ -23,7 +23,7 @@ require "timeout"
 require_relative 'slack_handler_util'
 
 class Chef::Handler::Slack < Chef::Handler
-  attr_reader :webhooks, :username, :config, :timeout, :icon_emoji, :fail_only, :message_detail_level, :cookbook_detail_level, :hostname
+  attr_reader :webhooks, :username, :config, :timeout, :icon_emoji, :fail_only, :message_detail_level, :cookbook_detail_level, :hostname, :channel
 
   def initialize(config = {})
     Chef::Log.debug('Initializing Chef::Handler::Slack')
@@ -33,11 +33,11 @@ class Chef::Handler::Slack < Chef::Handler
     @icon_emoji = @config[:icon_emoji]
     @icon_url = @config[:icon_url]
     @username = @config[:username]
+    @channel = @config[:channel]
     @webhooks = @config[:webhooks]
     @fail_only = @config[:fail_only]
     @message_detail_level = @config[:message_detail_level]
     @cookbook_detail_level = @config[:cookbook_detail_level]
-    @hostname = @config[:hostname]
   end
 
   def report
@@ -87,6 +87,7 @@ class Chef::Handler::Slack < Chef::Handler
   def request_body(message, text_attachment)
     body = {}
     body[:username] = @username unless @username.nil?
+    body[:channel] = @channel unless @channel.nil?
     body[:text] = message
     # icon_url takes precedence over icon_emoji
     if @icon_url

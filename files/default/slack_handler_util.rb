@@ -34,7 +34,7 @@ class SlackHandlerUtil
   end
 
   def node_details(context = {})
-    "#{environment_details(context)}node #{context['hostname'] || node.name}"
+    "#{environment_details(context)}node #{context[:hostname] || node.name}"
   end
 
   def environment_details(context = {})
